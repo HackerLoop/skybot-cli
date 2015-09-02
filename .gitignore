@@ -1,0 +1,7 @@
+.DS_Store
+bin/sim_posix.elf
+bin/skybot-router
+log
+node_modules
+theflash.bin
+sim_log.tll
