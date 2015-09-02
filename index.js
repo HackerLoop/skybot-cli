@@ -15,10 +15,9 @@ colors.setTheme({
   error: 'red'
 });
 
-let skybotRouterPath   = './bin/skybot-router';
-let uavDefinitionsPath = './vendor/Taulabs/uavobjectdefinition/'
-let simulatorPath      = './bin/sim_posix.elf';
-
+let skybotRouterPath   = __dirname + '/bin/skybot-router';
+let uavDefinitionsPath = __dirname + '/vendor/Taulabs/uavobjectdefinition/'
+let simulatorPath      = __dirname + '/bin/sim_posix.elf';
 
 let actions = {};
 
