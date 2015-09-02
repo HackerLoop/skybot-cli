@@ -1,0 +1,19 @@
+{
+  "name": "skybot-cli",
+  "version": "0.0.1",
+  "description": "CLI helper to run the skybot tools",
+  main: "index.js"
+  "bin": {
+    "skybot": "cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+
+  "dependencies": {
+    "commander": "^2.8.1",
+    "colors": "^1.1.2"
+  }
+}
