@@ -2,7 +2,9 @@
 
 const
   process  = require('child_process'),
-  colors = require('colors');
+  colors = require('colors'),
+  fse = require('fs-extra'),
+  Mustache = require('mustache');
 
 colors.setTheme({
   input: 'grey',
@@ -40,6 +42,22 @@ let createLogger = function(prefix) {
 
 actions.create = function(name) {
   p("info", "skybot", "Creating " + name);
+
+  fse.copySync(__dirname + "/template/skeleton", name);
+
+  let files = fse.readdirSync(name).map(function(filename) {
+    return name + '/' + filename;
+  });
+
+  files.forEach(function(file) {
+    let source = fse.readFileSync(file, "utf8")
+      let content = Mustache.render(source, {name: name});
+
+    fse.writeFileSync(file, content);
+    p("info", "create", file);
+  });
+
+  process.execSync("npm install", {cwd: name});
 };
 
 actions.simulate = function() {
