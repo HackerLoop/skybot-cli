@@ -2,7 +2,7 @@
   "name": "skybot-cli",
   "version": "0.0.1",
   "description": "CLI helper to run the skybot tools",
-  main: "index.js"
+  "main": "index.js",
   "bin": {
     "skybot": "cli.js"
   },
