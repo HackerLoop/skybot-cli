@@ -43,7 +43,7 @@ let createLogger = function(prefix) {
 actions.create = function(name) {
   p("info", "skybot", "Creating " + name);
 
-  fse.copySync(__dirname + "/template/skeleton", name);
+  fse.copySync(__dirname + "/template", name);
 
   let files = fse.readdirSync(name).map(function(filename) {
     return name + '/' + filename;
