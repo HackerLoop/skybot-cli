@@ -1,6 +1,6 @@
 'use strict';
 
-var skybot = require('skybot-module/skybot');
+var skybot = require('skybot-control/skybot');
 var helper = skybot.helper;
 
 /**

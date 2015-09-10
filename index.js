@@ -2,9 +2,11 @@
 
 const
   process  = require('child_process'),
-  colors = require('colors'),
-  fse = require('fs-extra'),
-  Mustache = require('mustache');
+  colors   = require('colors'),
+  fse      = require('fs-extra'),
+  Mustache = require('mustache'),
+  logfmt   = require('logfmt'),
+  through  = require('through');
 
 colors.setTheme({
   input: 'grey',
@@ -13,6 +15,7 @@ colors.setTheme({
   data: 'grey',
   help: 'cyan',
   warn: 'yellow',
+  warning: 'yellow',
   debug: 'blue',
   error: 'red'
 });
@@ -20,6 +23,7 @@ colors.setTheme({
 let skybotRouterPath   = __dirname + '/bin/skybot-router';
 let uavDefinitionsPath = __dirname + '/vendor/Taulabs/uavobjectdefinition/'
 let simulatorPath      = __dirname + '/bin/sim_posix.elf';
+let skybotControlPath   = 'node_modules/.bin/skybot-control';
 
 let actions = {};
 
@@ -65,19 +69,23 @@ actions.simulate = function() {
   p("help", "skybot", "WebSocket will be available on ws://127.0.0.1:4224");
   p("help", "skybot", "Stop simulation with Ctrl-C");
 
-  let routerLogger    = createLogger('skybot-router');
+  let routerLogger   = createLogger('router');
   let simulatorLogger = createLogger('simulator');
+  let controlLogger   = createLogger('control');
 
   let router    = process.exec(skybotRouterPath + " " + uavDefinitionsPath);
   let simulator = process.exec(simulatorPath);
+  let control    = process.exec(skybotControlPath);
 
-  router.stdout.on('data', routerLogger.info);
-  router.stderr.on('data', routerLogger.warn)
+  router.stderr.pipe(logfmt.streamParser()).pipe(through(function(object) {
+    p(object.level, "router", object.msg.trim());
+  }));
+  router.stdout.on('data', routerLogger.info)
   router.on('close', routerLogger.close)
 
-  simulator.stdout.on('data', simulatorLogger.info);
-  simulator.stderr.on('data', simulatorLogger.warn)
-  simulator.on('close', simulatorLogger.close)
+  control.stdout.on('data', controlLogger.info);
+  control.stderr.on('data', controlLogger.warn)
+  control.on('close', controlLogger.close)
 }
 
 actions.run = function() {
