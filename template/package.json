@@ -1,5 +1,5 @@
 {
-  "name": "oiyet",
+  "name": "{{name}}",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "skybot-module": "git+ssh://git@github.com:openskybot/skybot-module.git"
+    "skybot-control": "git+ssh://git@github.com:openskybot/skybot-control.git"
   }
 }
