@@ -36,6 +36,7 @@ let createLogger = function(prefix) {
   return {
     info: function(msg) { p('info', prefix, msg.trim()) },
     warn: function(msg) { p('warn', prefix, msg.trim()) },
+    help: function(msg) { p('help', prefix, msg.trim()) },
     close:  function(code) {
       if(code !== 0) {
         p('error', prefix, "exit with code " + code);
@@ -73,9 +74,17 @@ actions.simulate = function() {
   let simulatorLogger = createLogger('simulator');
   let controlLogger   = createLogger('control');
 
+  routerLogger.help('Starting');
   let router    = process.exec(skybotRouterPath + " " + uavDefinitionsPath);
+  simulatorLogger.help('Starting');
   let simulator = process.exec(simulatorPath);
-  let control    = process.exec(skybotControlPath);
+  setTimeout(function() {
+    controlLogger.help('Starting');
+    let control    = process.exec(skybotControlPath);
+    control.stdout.on('data', controlLogger.info);
+    control.stderr.on('data', controlLogger.warn)
+      control.on('close', controlLogger.close)
+  }, 10000);
 
   router.stderr.pipe(logfmt.streamParser()).pipe(through(function(object) {
     p(object.level, "router", object.msg.trim());
@@ -83,9 +92,6 @@ actions.simulate = function() {
   router.stdout.on('data', routerLogger.info)
   router.on('close', routerLogger.close)
 
-  control.stdout.on('data', controlLogger.info);
-  control.stderr.on('data', controlLogger.warn)
-  control.on('close', controlLogger.close)
 }
 
 actions.run = function() {
